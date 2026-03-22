@@ -14,10 +14,10 @@ import psycopg2
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# ✅ If Tesseract is not in PATH, set it manually like this:
+# If Tesseract is not in PATH, set it manually like this:
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-# ================== Setup ==================
+#  Setup 
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 db_url = os.getenv("DATABASE_URL")
@@ -27,7 +27,7 @@ if not api_key:
 else:
     genai.configure(api_key=api_key)
 
-# ================== Database Setup ==================
+#  Database Setup 
 engine = None
 SessionLocal = None
 Base = declarative_base()
@@ -76,10 +76,10 @@ def save_chat(user_message, ai_response, context_type, source_name=None):
     finally:
         db.close()
 
-# ================== LangChain LLM ==================
+#  LangChain LLM 
 llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", google_api_key=api_key)
 
-# ================== Streamlit UI ==================
+# Streamlit UI 
 st.set_page_config(page_title="GenAI Assistant", page_icon="🤖", layout="wide")
 st.title("🤖 GenAI Assistant with PostgreSQL")
 st.caption("Chat with LLM • Ask about PDFs • Ask about Images • Store history in DB")
@@ -87,7 +87,7 @@ st.caption("Chat with LLM • Ask about PDFs • Ask about Images • Store hist
 # Sidebar
 mode = st.sidebar.radio("Choose Mode", ["💬 Chat", "📄 PDF Q&A", "🖼️ Image Q&A", "📜 History"])
 
-# ================== Chat Mode ==================
+#  Chat Mode 
 if mode == "💬 Chat":
     st.subheader("💬 Chat with Gemini")
     user_input = st.text_input("You:", "")
@@ -99,7 +99,7 @@ if mode == "💬 Chat":
         # Save to DB
         save_chat(user_input, response.content, context_type="chat")
 
-# ================== PDF Q&A ==================
+#  PDF Q&A 
 elif mode == "📄 PDF Q&A":
     st.subheader("📄 Upload a PDF and ask questions")
     uploaded_file = st.file_uploader("Upload a PDF", type=["pdf"])
@@ -135,7 +135,7 @@ elif mode == "📄 PDF Q&A":
         else:
             st.error("⚠️ No text extracted from PDF.")
 
-# ================== Image Q&A ==================
+#  Image Q&A 
 elif mode == "🖼️ Image Q&A":
     st.subheader("🖼️ Upload an Image and ask questions")
     image_file = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"])
@@ -154,7 +154,7 @@ elif mode == "🖼️ Image Q&A":
             # Save to DB
             save_chat(query, response.text, context_type="image", source_name=image_file.name)
 
-# ================== History ==================
+#  History 
 elif mode == "📜 History":
     st.subheader("📜 Previous Conversations (from Postgres)")
     if SessionLocal:
