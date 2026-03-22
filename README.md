@@ -1,4 +1,4 @@
-# 🤖 GenAI Assistant with PostgreSQL
+# 🤖 GenAI Agent with PostgreSQL
 
 > 🚀 Production-ready AI system combining **LLMs, OCR, multimodal understanding, and database persistence**
 
